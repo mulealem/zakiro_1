@@ -68,15 +68,15 @@ const job = new CronJob(
             };
           }
         );
-        console.log("combankethExchangeRates:: :: ", combankethExchangeRates);
+        // console.log("combankethExchangeRates:: :: ", combankethExchangeRates);
 
-        await notifyTelegramBotUsers(
-          combankethExchangeRates.map((exchangeRate) => ({
-            currency: exchangeRate.currency,
-            buying_price: exchangeRate.buying,
-            selling_price: exchangeRate.selling,
-          }))
-        );
+        // await notifyTelegramBotUsers(
+        //   combankethExchangeRates.map((exchangeRate) => ({
+        //     currency: exchangeRate.currency,
+        //     buying_price: exchangeRate.buying,
+        //     selling_price: exchangeRate.selling,
+        //   }))
+        // );
 
         const { data: exchangeRatesData, error: exchangeRatesError } =
           await supabaseClient.from("exchange_rates_per_bank").select("*");
@@ -104,7 +104,9 @@ const job = new CronJob(
           };
 
           if (decendingCombankethExchangeRatesData.length === 0) {
-            // console.log("No data found for combanketh");
+            console.log("No data found!");
+
+            // console.log("No data found!");
 
             // insert combankethExchangeRates to exchangeRatesData
             const { data: newExchangeRatesData, error: newExchangeRatesError } =
@@ -119,14 +121,14 @@ const job = new CronJob(
                   exchangeRate.selling_price > 0
               );
 
-            await notifyTelegramBotUsers(filteredNewCombankethExchangeRates);
-
             if (newExchangeRatesError) {
               console.error("error", newExchangeRatesError);
             } else {
-              console.log("INSERTED NEW DATA .");
+              console.log("INSERTED NEW DATA.");
+              await notifyTelegramBotUsers(filteredNewCombankethExchangeRates);
             }
           } else {
+            console.log("Data found >> >> >>");
             // console.log(typeof decendingCombankethExchangeRatesData[0].exchange);
             // console.log(decendingCombankethExchangeRatesData[0].exchange);
 
@@ -193,8 +195,6 @@ const job = new CronJob(
               //   });
               // }
 
-              await notifyTelegramBotUsers(filteredNewCombankethExchangeRates);
-
               const {
                 data: newExchangeRatesData,
                 error: newExchangeRatesError,
@@ -211,6 +211,9 @@ const job = new CronJob(
                 console.error("error", newExchangeRatesError);
               } else {
                 console.log("INSERTED NEW DATA");
+                await notifyTelegramBotUsers(
+                  filteredNewCombankethExchangeRates
+                );
               }
             }
           }
