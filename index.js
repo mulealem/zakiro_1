@@ -45,7 +45,7 @@ bot.on("message", async (msg) => {
 
 const job = new CronJob(
   // every 30 minutes
-  "*/1 * * * *", // cronTime
+  "*/30 * * * *", // cronTime
   async function () {
     console.log("Running job");
 
